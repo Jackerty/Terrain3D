@@ -6,8 +6,8 @@
 #include <godot_cpp/classes/resource.hpp>
 
 #include "constants.h"
+#include "using.inc"
 
-using namespace godot;
 class Terrain3DAssets;
 
 // Parent class of Terrain3DMeshAsset and Terrain3DTextureAsset

@@ -8,9 +8,9 @@
 #include "constants.h"
 #include "generated_texture.h"
 
-class Terrain3D;
+#include "using.inc"
 
-using namespace godot;
+class Terrain3D;
 
 class Terrain3DMaterial : public Resource {
 	GDCLASS(Terrain3DMaterial, Resource);

@@ -7,10 +7,9 @@
 #include "generated_texture.h"
 #include "terrain_3d.h"
 #include "terrain_3d_region.h"
+#include "using.inc"
 
 class Terrain3D;
-
-using namespace godot;
 
 class Terrain3DData : public Object {
 	GDCLASS(Terrain3DData, Object);

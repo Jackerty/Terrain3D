@@ -6,8 +6,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include "terrain_3d.h"
-
-using namespace godot;
+#include "using.inc"
 
 /**
  * Prints warnings, errors, and messages to the console.

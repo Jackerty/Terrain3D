@@ -4,8 +4,7 @@
 #define TARGET_NODE3D_CLASS_H
 
 #include <godot_cpp/classes/node3d.hpp>
-
-using namespace godot;
+#include "using.inc"
 
 class TargetNode3D {
 	CLASS_NAME_STATIC("Terrain3DTargetNode3D");

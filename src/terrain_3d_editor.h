@@ -9,7 +9,7 @@
 #include "terrain_3d.h"
 #include "terrain_3d_region.h"
 
-using namespace godot;
+#include "using.inc"
 
 class Terrain3DEditor : public Object {
 	GDCLASS(Terrain3DEditor, Object);

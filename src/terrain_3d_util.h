@@ -10,8 +10,7 @@
 #include "constants.h"
 #include "generated_texture.h"
 #include "terrain_3d.h"
-
-using namespace godot;
+#include "using.inc"
 
 // This file holds stateless utility functions for both C++ and GDScript
 // The class exposes static member and inline functions to GDscript

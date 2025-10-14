@@ -8,8 +8,8 @@
 #include "terrain_3d.h"
 #include "terrain_3d_mesh_asset.h"
 #include "terrain_3d_texture_asset.h"
+#include "using.inc"
 
-using namespace godot;
 class Terrain3D;
 class Terrain3DInstancer;
 

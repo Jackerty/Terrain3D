@@ -4,8 +4,7 @@
 #define TERRAIN3D_MESHER_CLASS_H
 
 #include "constants.h"
-
-using namespace godot;
+#include "using.inc"
 
 class Terrain3D;
 

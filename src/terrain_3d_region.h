@@ -5,8 +5,7 @@
 
 #include "constants.h"
 #include "terrain_3d_util.h"
-
-using namespace godot;
+#include "using.inc"
 
 class Terrain3DRegion : public Resource {
 	GDCLASS(Terrain3DRegion, Resource);
