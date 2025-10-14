@@ -3,7 +3,8 @@
 #ifndef CONSTANTS_CLASS_H
 #define CONSTANTS_CLASS_H
 
-using namespace godot;
+#include <functional>
+#include "using.inc"
 
 // Engine Shortcuts
 #define RS RenderingServer::get_singleton()
