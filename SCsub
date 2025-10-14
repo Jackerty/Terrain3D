@@ -1,0 +1,17 @@
+
+# This is the build script when Terrain3D is build with the Godot engine.
+# Script cannot be run on it's own.
+import BuildCommon as bc
+
+# Export "env_modules" is similiar as "env" but macro GD_NATIVE is defined.
+# Except env_modules does not seems to modules_sources... I don't know...
+Import("env")
+Import("env_modules")
+
+# Make a copy so that we can edit include paths.
+env_terrain3d = env_modules.Clone()
+env_terrain3d.Append(CPPPATH="GDInteropt")
+
+sources = bc.GetSources(env_terrain3d)
+
+env_terrain3d.add_source_files(env.modules_sources, sources)
