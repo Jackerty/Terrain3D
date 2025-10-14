@@ -2,7 +2,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 
-#include "register_types.h"
+#include "../register_types.h"
 #include "terrain_3d.h"
 #include "terrain_3d_editor.h"
 
