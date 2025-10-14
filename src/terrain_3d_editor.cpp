@@ -1,6 +1,7 @@
 // Copyright © 2025 Cory Petkovsek, Roope Palmroos, and Contributors.
 
 #include <godot_cpp/classes/editor_undo_redo_manager.hpp>
+#include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/time.hpp>
 
@@ -630,7 +631,11 @@ void Terrain3DEditor::_store_undo() {
 	}
 
 	// Store data in Godot's Undo/Redo Manager
-	EditorUndoRedoManager *undo_redo = _terrain->get_plugin()->get_undo_redo();
+	//
+	// Do not use EditorPlugin::get_undo_redo since it is protected in editor. It is public in GDExtension
+	// because GDScript has no protection levels hence this is unintented usage. Since GDExtension does not have
+	// EditorUnderRedoManger::get_singleton we go around about way via EditorInterface.
+	EditorUndoRedoManager *undo_redo = _terrain->get_plugin()->get_editor_interface()->get_editor_undo_redo();
 	LOG(INFO, "Storing undo snapshot");
 	String action_name = String("Terrain3D ") + OPNAME[_operation] + String(" ") + TOOLNAME[_tool];
 	LOG(DEBUG, "Creating undo action: '", action_name, "'");
