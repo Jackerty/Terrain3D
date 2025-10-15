@@ -101,12 +101,12 @@ RID Terrain3DMesher::_instantiate_mesh(const PackedVector3Array &p_vertices, con
 	arrays[RenderingServer::ARRAY_TANGENT] = tangents;
 
 	LOG(DEBUG, "Creating mesh via the Rendering server");
-	RID mesh = RS->mesh_create();
-	RS->mesh_add_surface_from_arrays(mesh, RenderingServer::PRIMITIVE_TRIANGLES, arrays);
+	RID mesh = RSs->mesh_create();
+	RSs->mesh_add_surface_from_arrays(mesh, RenderingServer::PRIMITIVE_TRIANGLES, arrays);
 
 	LOG(DEBUG, "Setting custom aabb: ", p_aabb.position, ", ", p_aabb.size);
-	RS->mesh_set_custom_aabb(mesh, p_aabb);
-	RS->mesh_surface_set_material(mesh, 0, _terrain->get_material()->get_material_rid());
+	RSs->mesh_set_custom_aabb(mesh, p_aabb);
+	RSs->mesh_surface_set_material(mesh, 0, _terrain->get_material()->get_material_rid());
 
 	return mesh;
 }
@@ -124,7 +124,7 @@ void Terrain3DMesher::_generate_clipmap(const int p_size, const int p_lods, cons
 		int tile_ammount = (level == 0) ? 16 : 12;
 
 		for (int i = 0; i < tile_ammount; i++) {
-			RID tile_rid = RS->instance_create2(_mesh_rids[level == 0 ? STANDARD_TILE : TILE], p_scenario);
+			RID tile_rid = RSs->instance_create2(_mesh_rids[level == 0 ? STANDARD_TILE : TILE], p_scenario);
 			tile_rids.append(tile_rid);
 		}
 		lod.append(tile_rids); // index 0 TILE
@@ -132,14 +132,14 @@ void Terrain3DMesher::_generate_clipmap(const int p_size, const int p_lods, cons
 		// 4 Edges present on all LODs
 		Array edge_a_rids;
 		for (int i = 0; i < 2; i++) {
-			RID edge_a_rid = RS->instance_create2(_mesh_rids[level == 0 ? STANDARD_EDGE_A : EDGE_A], p_scenario);
+			RID edge_a_rid = RSs->instance_create2(_mesh_rids[level == 0 ? STANDARD_EDGE_A : EDGE_A], p_scenario);
 			edge_a_rids.append(edge_a_rid);
 		}
 		lod.append(edge_a_rids); // index 1 EDGE_A
 
 		Array edge_b_rids;
 		for (int i = 0; i < 2; i++) {
-			RID edge_b_rid = RS->instance_create2(_mesh_rids[level == 0 ? STANDARD_EDGE_B : EDGE_B], p_scenario);
+			RID edge_b_rid = RSs->instance_create2(_mesh_rids[level == 0 ? STANDARD_EDGE_B : EDGE_B], p_scenario);
 			edge_b_rids.append(edge_b_rid);
 		}
 		lod.append(edge_b_rids); // index 2 EDGE_B
@@ -148,14 +148,14 @@ void Terrain3DMesher::_generate_clipmap(const int p_size, const int p_lods, cons
 		if (level > 0) {
 			Array fill_a_rids;
 			for (int i = 0; i < 2; i++) {
-				RID fill_a_rid = RS->instance_create2(_mesh_rids[FILL_A], p_scenario);
+				RID fill_a_rid = RSs->instance_create2(_mesh_rids[FILL_A], p_scenario);
 				fill_a_rids.append(fill_a_rid);
 			}
 			lod.append(fill_a_rids); // index 4 FILL_A
 
 			Array fill_b_rids;
 			for (int i = 0; i < 2; i++) {
-				RID fill_b_rid = RS->instance_create2(_mesh_rids[FILL_B], p_scenario);
+				RID fill_b_rid = RSs->instance_create2(_mesh_rids[FILL_B], p_scenario);
 				fill_b_rids.append(fill_b_rid);
 			}
 			lod.append(fill_b_rids); // index 5 FILL_B
@@ -164,14 +164,14 @@ void Terrain3DMesher::_generate_clipmap(const int p_size, const int p_lods, cons
 		} else {
 			Array trim_a_rids;
 			for (int i = 0; i < 2; i++) {
-				RID trim_a_rid = RS->instance_create2(_mesh_rids[STANDARD_TRIM_A], p_scenario);
+				RID trim_a_rid = RSs->instance_create2(_mesh_rids[STANDARD_TRIM_A], p_scenario);
 				trim_a_rids.append(trim_a_rid);
 			}
 			lod.append(trim_a_rids); // index 4 TRIM_A
 
 			Array trim_b_rids;
 			for (int i = 0; i < 2; i++) {
-				RID trim_b_rid = RS->instance_create2(_mesh_rids[STANDARD_TRIM_B], p_scenario);
+				RID trim_b_rid = RSs->instance_create2(_mesh_rids[STANDARD_TRIM_B], p_scenario);
 				trim_b_rids.append(trim_b_rid);
 			}
 			lod.append(trim_b_rids); // index 5 TRIM_B
@@ -258,7 +258,7 @@ void Terrain3DMesher::_clear_clipmap() {
 		for (int mesh = 0; mesh < lod_array.size(); mesh++) {
 			Array mesh_array = lod_array[mesh];
 			for (int instance = 0; instance < mesh_array.size(); instance++) {
-				RS->free_rid(mesh_array[instance]);
+				RSs->free_rid(mesh_array[instance]);
 			}
 			mesh_array.clear();
 		}
@@ -272,7 +272,7 @@ void Terrain3DMesher::_clear_clipmap() {
 void Terrain3DMesher::_clear_mesh_types() {
 	LOG(INFO, "Freeing all clipmap meshes");
 	for (int m = 0; m < _mesh_rids.size(); m++) {
-		RS->free_rid(_mesh_rids[m]);
+		RSs->free_rid(_mesh_rids[m]);
 	}
 	_mesh_rids.clear();
 	return;
@@ -325,7 +325,7 @@ void Terrain3DMesher::snap() {
 
 	real_t vertex_spacing = _terrain->get_vertex_spacing();
 	Vector3 snapped_pos = (target_pos / vertex_spacing).floor() * vertex_spacing;
-	RS->material_set_param(_terrain->get_material()->get_material_rid(), "_camera_pos", snapped_pos);
+	RSs->material_set_param(_terrain->get_material()->get_material_rid(), "_camera_pos", snapped_pos);
 
 	Vector3 pos = V3_ZERO;
 	for (int lod = 0; lod < _clipmap_rids.size(); ++lod) {
@@ -389,10 +389,10 @@ void Terrain3DMesher::snap() {
 				}
 				t = t.scaled(lod_scale);
 				t.origin += pos;
-				RS->instance_set_transform(mesh_array[instance], t);
+				RSs->instance_set_transform(mesh_array[instance], t);
 // Deprecated Godot 4.5+
 #if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR == 4
-				RS->instance_reset_physics_interpolation(mesh_array[instance]);
+				RSs->instance_reset_physics_interpolation(mesh_array[instance]);
 #endif
 			}
 		}
@@ -436,12 +436,12 @@ void Terrain3DMesher::update() {
 		for (int mesh = 0; mesh < lod_array.size(); ++mesh) {
 			Array mesh_array = lod_array[mesh];
 			for (int instance = 0; instance < mesh_array.size(); ++instance) {
-				RS->instance_set_visible(mesh_array[instance], visible);
-				RS->instance_set_scenario(mesh_array[instance], scenario);
-				RS->instance_set_layer_mask(mesh_array[instance], render_layers);
-				RS->instance_geometry_set_cast_shadows_setting(mesh_array[instance], cast_shadows);
-				RS->instance_geometry_set_flag(mesh_array[instance], RenderingServer::INSTANCE_FLAG_USE_BAKED_LIGHT, baked_light);
-				RS->instance_geometry_set_flag(mesh_array[instance], RenderingServer::INSTANCE_FLAG_USE_DYNAMIC_GI, dynamic_gi);
+				RSs->instance_set_visible(mesh_array[instance], visible);
+				RSs->instance_set_scenario(mesh_array[instance], scenario);
+				RSs->instance_set_layer_mask(mesh_array[instance], render_layers);
+				RSs->instance_geometry_set_cast_shadows_setting(mesh_array[instance], cast_shadows);
+				RSs->instance_geometry_set_flag(mesh_array[instance], RenderingServer::INSTANCE_FLAG_USE_BAKED_LIGHT, baked_light);
+				RSs->instance_geometry_set_flag(mesh_array[instance], RenderingServer::INSTANCE_FLAG_USE_DYNAMIC_GI, dynamic_gi);
 			}
 		}
 	}
@@ -459,10 +459,10 @@ void Terrain3DMesher::update_aabbs() {
 	LOG(INFO, "Updating ", _mesh_rids.size(), " meshes AABBs")
 	for (int m = 0; m < _mesh_rids.size(); m++) {
 		RID mesh = _mesh_rids[m];
-		AABB aabb = RS->mesh_get_custom_aabb(mesh);
+		AABB aabb = RSs->mesh_get_custom_aabb(mesh);
 		aabb.position.y = height_range.x - cull_margin;
 		aabb.size.y = height_range.y + cull_margin * 2.f;
-		RS->mesh_set_custom_aabb(mesh, aabb);
+		RSs->mesh_set_custom_aabb(mesh, aabb);
 	}
 	return;
 }

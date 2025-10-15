@@ -409,7 +409,7 @@ void Terrain3DMaterial::_update_shader() {
 		code = _generate_shader_code();
 	}
 	_shader->set_code(_inject_editor_code(code));
-	RS->material_set_shader(_material, get_shader_rid());
+	RSs->material_set_shader(_material, get_shader_rid());
 	LOG(DEBUG, "Material rid: ", _material, ", shader rid: ", get_shader_rid());
 
 	// Update custom shader params in RenderingServer
@@ -428,20 +428,20 @@ void Terrain3DMaterial::_update_shader() {
 		if (value.get_type() == Variant::OBJECT) {
 			Ref<Texture> tex = value;
 			if (tex.is_valid()) {
-				RS->material_set_param(_material, param, tex->get_rid());
+				RSs->material_set_param(_material, param, tex->get_rid());
 			} else {
-				RS->material_set_param(_material, param, Variant());
+				RSs->material_set_param(_material, param, Variant());
 			}
 		} else {
-			RS->material_set_param(_material, param, value);
+			RSs->material_set_param(_material, param, value);
 		}
 	}
 
 	// Set specific shader parameters
-	RS->material_set_param(_material, "_background_mode", _world_background);
+	RSs->material_set_param(_material, "_background_mode", _world_background);
 
 	// If no noise texture, generate one
-	if (_active_params.has("noise_texture") && RS->material_get_param(_material, "noise_texture").get_type() == Variant::NIL) {
+	if (_active_params.has("noise_texture") && RSs->material_get_param(_material, "noise_texture").get_type() == Variant::NIL) {
 		LOG(INFO, "Generating default noise_texture for shader");
 		Ref<FastNoiseLite> fnoise;
 		fnoise.instantiate();
@@ -490,8 +490,8 @@ void Terrain3DMaterial::_update_maps() {
 		LOG(ERROR, "Expected region_map.size() of ", Terrain3DData::REGION_MAP_SIZE * Terrain3DData::REGION_MAP_SIZE);
 		return;
 	}
-	RS->material_set_param(_material, "_region_map", region_map);
-	RS->material_set_param(_material, "_region_map_size", Terrain3DData::REGION_MAP_SIZE);
+	RSs->material_set_param(_material, "_region_map", region_map);
+	RSs->material_set_param(_material, "_region_map_size", Terrain3DData::REGION_MAP_SIZE);
 	if (Terrain3D::debug_level >= EXTREME) {
 		LOG(EXTREME, "Region map");
 		for (int i = 0; i < region_map.size(); i++) {
@@ -503,27 +503,27 @@ void Terrain3DMaterial::_update_maps() {
 
 	TypedArray<Vector2i> region_locations = data->get_region_locations();
 	LOG(EXTREME, "Region_locations size: ", region_locations.size(), " ", region_locations);
-	RS->material_set_param(_material, "_region_locations", region_locations);
+	RSs->material_set_param(_material, "_region_locations", region_locations);
 
 	real_t region_size = real_t(_terrain->get_region_size());
 	LOG(EXTREME, "Setting region size in material: ", region_size);
-	RS->material_set_param(_material, "_region_size", region_size);
-	RS->material_set_param(_material, "_region_texel_size", 1.0f / region_size);
+	RSs->material_set_param(_material, "_region_size", region_size);
+	RSs->material_set_param(_material, "_region_texel_size", 1.0f / region_size);
 
-	RS->material_set_param(_material, "_height_maps", data->get_height_maps_rid());
-	RS->material_set_param(_material, "_control_maps", data->get_control_maps_rid());
-	RS->material_set_param(_material, "_color_maps", data->get_color_maps_rid());
+	RSs->material_set_param(_material, "_height_maps", data->get_height_maps_rid());
+	RSs->material_set_param(_material, "_control_maps", data->get_control_maps_rid());
+	RSs->material_set_param(_material, "_color_maps", data->get_color_maps_rid());
 	LOG(EXTREME, "Height map RID: ", data->get_height_maps_rid());
 	LOG(EXTREME, "Control map RID: ", data->get_control_maps_rid());
 	LOG(EXTREME, "Color map RID: ", data->get_color_maps_rid());
 
 	real_t spacing = _terrain->get_vertex_spacing();
 	LOG(EXTREME, "Setting vertex spacing in material: ", spacing);
-	RS->material_set_param(_material, "_vertex_spacing", spacing);
-	RS->material_set_param(_material, "_vertex_density", 1.0f / spacing);
+	RSs->material_set_param(_material, "_vertex_spacing", spacing);
+	RSs->material_set_param(_material, "_vertex_density", 1.0f / spacing);
 
 	real_t mesh_size = real_t(_terrain->get_mesh_size());
-	RS->material_set_param(_material, "_mesh_size", mesh_size);
+	RSs->material_set_param(_material, "_mesh_size", mesh_size);
 }
 
 // Called from signal connected in Terrain3D, emitted by texture_list
@@ -536,15 +536,15 @@ void Terrain3DMaterial::_update_texture_arrays() {
 		return;
 	}
 
-	RS->material_set_param(_material, "_texture_array_albedo", asset_list->get_albedo_array_rid());
-	RS->material_set_param(_material, "_texture_array_normal", asset_list->get_normal_array_rid());
-	RS->material_set_param(_material, "_texture_color_array", asset_list->get_texture_colors());
-	RS->material_set_param(_material, "_texture_normal_depth_array", asset_list->get_texture_normal_depths());
-	RS->material_set_param(_material, "_texture_ao_strength_array", asset_list->get_texture_ao_strengths());
-	RS->material_set_param(_material, "_texture_roughness_mod_array", asset_list->get_texture_roughness_mods());
-	RS->material_set_param(_material, "_texture_uv_scale_array", asset_list->get_texture_uv_scales());
-	RS->material_set_param(_material, "_texture_vertical_projections", asset_list->get_texture_vertical_projections());
-	RS->material_set_param(_material, "_texture_detile_array", asset_list->get_texture_detiles());
+	RSs->material_set_param(_material, "_texture_array_albedo", asset_list->get_albedo_array_rid());
+	RSs->material_set_param(_material, "_texture_array_normal", asset_list->get_normal_array_rid());
+	RSs->material_set_param(_material, "_texture_color_array", asset_list->get_texture_colors());
+	RSs->material_set_param(_material, "_texture_normal_depth_array", asset_list->get_texture_normal_depths());
+	RSs->material_set_param(_material, "_texture_ao_strength_array", asset_list->get_texture_ao_strengths());
+	RSs->material_set_param(_material, "_texture_roughness_mod_array", asset_list->get_texture_roughness_mods());
+	RSs->material_set_param(_material, "_texture_uv_scale_array", asset_list->get_texture_uv_scales());
+	RSs->material_set_param(_material, "_texture_vertical_projections", asset_list->get_texture_vertical_projections());
+	RSs->material_set_param(_material, "_texture_detile_array", asset_list->get_texture_detiles());
 
 	// Enable checkered view if texture_count is 0, disable if not
 	if (asset_list->get_texture_count() == 0) {
@@ -580,7 +580,7 @@ void Terrain3DMaterial::initialize(Terrain3D *p_terrain) {
 	LOG(INFO, "Initializing material");
 	_preload_shaders();
 	if (!_material.is_valid()) {
-		_material = RS->material_create();
+		_material = RSs->material_create();
 	}
 	_shader.instantiate();
 	_update_shader();
@@ -600,7 +600,7 @@ void Terrain3DMaterial::destroy() {
 	_active_params.clear();
 	_shader_params.clear();
 	if (_material.is_valid()) {
-		RS->free_rid(_material);
+		RSs->free_rid(_material);
 		_material = RID();
 	}
 }
@@ -788,7 +788,7 @@ Error Terrain3DMaterial::save(const String &p_path) {
 	LOG(DEBUG, "Generating parameter list from shaders");
 	// Get shader parameters from default shader (eg world_noise)
 	Array param_list;
-	param_list = RS->get_shader_parameter_list(get_shader_rid());
+	param_list = RSs->get_shader_parameter_list(get_shader_rid());
 	// Get shader parameters from custom shader if present
 	if (_shader_override.is_valid()) {
 		param_list.append_array(_shader_override->get_shader_uniform_list(true));
@@ -846,7 +846,7 @@ void Terrain3DMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 		param_list = _shader_override->get_shader_uniform_list(true);
 	} else {
 		// Get shader parameters from default shader (eg world_noise)
-		param_list = RS->get_shader_parameter_list(get_shader_rid());
+		param_list = RSs->get_shader_parameter_list(get_shader_rid());
 	}
 
 	_active_params.clear();
@@ -893,22 +893,22 @@ void Terrain3DMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 // This is called 10x more than the others, so be efficient
 bool Terrain3DMaterial::_property_can_revert(const StringName &p_name) const {
 	IS_INIT_COND(!_active_params.has(p_name), Resource::_property_can_revert(p_name));
-	Variant default_value = RS->shader_get_parameter_default(get_shader_rid(), p_name);
-	Variant current_value = RS->material_get_param(_material, p_name);
+	Variant default_value = RSs->shader_get_parameter_default(get_shader_rid(), p_name);
+	Variant current_value = RSs->material_get_param(_material, p_name);
 	return default_value != current_value;
 }
 
 // Provide uniform default values in r_property
 bool Terrain3DMaterial::_property_get_revert(const StringName &p_name, Variant &r_property) const {
 	IS_INIT_COND(!_active_params.has(p_name), Resource::_property_get_revert(p_name, r_property));
-	r_property = RS->shader_get_parameter_default(get_shader_rid(), p_name);
+	r_property = RSs->shader_get_parameter_default(get_shader_rid(), p_name);
 	return true;
 }
 
 bool Terrain3DMaterial::_set(const StringName &p_name, const Variant &p_property) {
 	IS_INIT_COND(!_active_params.has(p_name), Resource::_set(p_name, p_property));
 	if (p_property.get_type() == Variant::NIL) {
-		RS->material_set_param(_material, p_name, Variant());
+		RSs->material_set_param(_material, p_name, Variant());
 		_shader_params.erase(p_name);
 		return true;
 	}
@@ -919,13 +919,13 @@ bool Terrain3DMaterial::_set(const StringName &p_name, const Variant &p_property
 		Ref<Texture> tex = p_property;
 		if (tex.is_valid()) {
 			_shader_params[p_name] = tex;
-			RS->material_set_param(_material, p_name, tex->get_rid());
+			RSs->material_set_param(_material, p_name, tex->get_rid());
 		} else {
-			RS->material_set_param(_material, p_name, Variant());
+			RSs->material_set_param(_material, p_name, Variant());
 		}
 	} else {
 		_shader_params[p_name] = p_property;
-		RS->material_set_param(_material, p_name, p_property);
+		RSs->material_set_param(_material, p_name, p_property);
 	}
 	return true;
 }
@@ -935,7 +935,7 @@ bool Terrain3DMaterial::_set(const StringName &p_name, const Variant &p_property
 bool Terrain3DMaterial::_get(const StringName &p_name, Variant &r_property) const {
 	IS_INIT_COND(!_active_params.has(p_name), Resource::_get(p_name, r_property));
 
-	r_property = RS->material_get_param(_material, p_name);
+	r_property = RSs->material_get_param(_material, p_name);
 	// Material server only has RIDs, but inspector needs objects for things like Textures
 	// So if its an RID, return the object
 	if (r_property.get_type() == Variant::RID && _shader_params.has(p_name)) {

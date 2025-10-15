@@ -127,7 +127,7 @@ void Terrain3DCollision::_shape_set_disabled(const int p_shape_id, const bool p_
 		shape->set_disabled(p_disabled);
 		shape->set_visible(!p_disabled);
 	} else {
-		PS->body_set_shape_disabled(_static_body_rid, p_shape_id, p_disabled);
+		PSs->body_set_shape_disabled(_static_body_rid, p_shape_id, p_disabled);
 	}
 }
 
@@ -136,7 +136,7 @@ void Terrain3DCollision::_shape_set_transform(const int p_shape_id, const Transf
 		CollisionShape3D *shape = _shapes[p_shape_id];
 		shape->set_transform(p_xform);
 	} else {
-		PS->body_set_shape_transform(_static_body_rid, p_shape_id, p_xform);
+		PSs->body_set_shape_transform(_static_body_rid, p_shape_id, p_xform);
 	}
 }
 
@@ -145,7 +145,7 @@ Vector3 Terrain3DCollision::_shape_get_position(const int p_shape_id) const {
 		CollisionShape3D *shape = _shapes[p_shape_id];
 		return shape->get_global_position();
 	} else {
-		return PS->body_get_shape_transform(_static_body_rid, p_shape_id).origin;
+		return PSs->body_get_shape_transform(_static_body_rid, p_shape_id).origin;
 	}
 }
 
@@ -155,8 +155,8 @@ void Terrain3DCollision::_shape_set_data(const int p_shape_id, const Dictionary 
 		Ref<HeightMapShape3D> hshape = shape->get_shape();
 		hshape->set_map_data(p_dict["heights"]);
 	} else {
-		RID shape_rid = PS->body_get_shape(_static_body_rid, p_shape_id);
-		PS->shape_set_data(shape_rid, p_dict);
+		RID shape_rid = PSs->body_get_shape(_static_body_rid, p_shape_id);
+		PSs->shape_set_data(shape_rid, p_dict);
 	}
 }
 
@@ -168,13 +168,13 @@ void Terrain3DCollision::_reload_physics_material() {
 	} else {
 		if (_static_body_rid.is_valid()) {
 			if (_physics_material.is_null()) {
-				PS->body_set_param(_static_body_rid, PhysicsServer3D::BODY_PARAM_BOUNCE, 0.f);
-				PS->body_set_param(_static_body_rid, PhysicsServer3D::BODY_PARAM_FRICTION, 1.f);
+				PSs->body_set_param(_static_body_rid, PhysicsServer3D::BODY_PARAM_BOUNCE, 0.f);
+				PSs->body_set_param(_static_body_rid, PhysicsServer3D::BODY_PARAM_FRICTION, 1.f);
 			} else {
 				real_t computed_bounce = _physics_material->get_bounce() * (_physics_material->is_absorbent() ? -1.f : 1.f);
 				real_t computed_friction = _physics_material->get_friction() * (_physics_material->is_rough() ? -1.f : 1.f);
-				PS->body_set_param(_static_body_rid, PhysicsServer3D::BODY_PARAM_BOUNCE, computed_bounce);
-				PS->body_set_param(_static_body_rid, PhysicsServer3D::BODY_PARAM_FRICTION, computed_friction);
+				PSs->body_set_param(_static_body_rid, PhysicsServer3D::BODY_PARAM_BOUNCE, computed_bounce);
+				PSs->body_set_param(_static_body_rid, PhysicsServer3D::BODY_PARAM_FRICTION, computed_friction);
 			}
 		}
 	}
@@ -227,13 +227,13 @@ void Terrain3DCollision::build() {
 		_static_body->set_collision_priority(_priority);
 	} else {
 		LOG(INFO, "Building collision with Physics Server");
-		_static_body_rid = PS->body_create();
-		PS->body_set_mode(_static_body_rid, PhysicsServer3D::BODY_MODE_STATIC);
-		PS->body_set_space(_static_body_rid, _terrain->get_world_3d()->get_space());
-		PS->body_attach_object_instance_id(_static_body_rid, _terrain->get_instance_id());
-		PS->body_set_collision_mask(_static_body_rid, _mask);
-		PS->body_set_collision_layer(_static_body_rid, _layer);
-		PS->body_set_collision_priority(_static_body_rid, _priority);
+		_static_body_rid = PSs->body_create();
+		PSs->body_set_mode(_static_body_rid, PhysicsServer3D::BODY_MODE_STATIC);
+		PSs->body_set_space(_static_body_rid, _terrain->get_world_3d()->get_space());
+		PSs->body_attach_object_instance_id(_static_body_rid, _terrain->get_instance_id());
+		PSs->body_set_collision_mask(_static_body_rid, _mask);
+		PSs->body_set_collision_layer(_static_body_rid, _layer);
+		PSs->body_set_collision_priority(_static_body_rid, _priority);
 	}
 	_reload_physics_material();
 
@@ -274,8 +274,8 @@ void Terrain3DCollision::build() {
 			col_shape->set_owner(_static_body);
 			col_shape->set_transform(xform);
 		} else {
-			RID shape_rid = PS->heightmap_shape_create();
-			PS->body_add_shape(_static_body_rid, shape_rid, xform, true);
+			RID shape_rid = PSs->heightmap_shape_create();
+			PSs->body_add_shape(_static_body_rid, shape_rid, xform, true);
 			LOG(DEBUG, "Adding shape: ", i, ", rid: ", shape_rid.get_id(), " pos: ", _shape_get_position(i));
 		}
 	}
@@ -329,7 +329,7 @@ void Terrain3DCollision::update(const bool p_rebuild) {
 		TypedArray<int> inactive_shape_ids;
 
 		real_t radius_sqr = real_t(_radius * _radius);
-		int shape_count = is_editor_mode() ? _shapes.size() : PS->body_get_shape_count(_static_body_rid);
+		int shape_count = is_editor_mode() ? _shapes.size() : PSs->body_get_shape_count(_static_body_rid);
 		for (int i = 0; i < shape_count; i++) {
 			// Descaled global position of shape center
 			Vector3 shape_center = _shape_get_position(i) / spacing;
@@ -422,14 +422,14 @@ void Terrain3DCollision::destroy() {
 	// Physics Server
 	if (_static_body_rid.is_valid()) {
 		// Shape IDs change as they are freed, so it's not safe to iterate over them while freeing.
-		while (PS->body_get_shape_count(_static_body_rid) > 0) {
-			RID rid = PS->body_get_shape(_static_body_rid, 0);
+		while (PSs->body_get_shape_count(_static_body_rid) > 0) {
+			RID rid = PSs->body_get_shape(_static_body_rid, 0);
 			LOG(DEBUG, "Freeing CollisionShape RID ", rid);
-			PS->free_rid(rid);
+			PSs->free_rid(rid);
 		}
 
 		LOG(DEBUG, "Freeing StaticBody RID");
-		PS->free_rid(_static_body_rid);
+		PSs->free_rid(_static_body_rid);
 		_static_body_rid = RID();
 	}
 
@@ -497,7 +497,7 @@ void Terrain3DCollision::set_layer(const uint32_t p_layers) {
 		}
 	} else {
 		if (_static_body_rid.is_valid()) {
-			PS->body_set_collision_layer(_static_body_rid, _layer);
+			PSs->body_set_collision_layer(_static_body_rid, _layer);
 		}
 	}
 }
@@ -511,7 +511,7 @@ void Terrain3DCollision::set_mask(const uint32_t p_mask) {
 		}
 	} else {
 		if (_static_body_rid.is_valid()) {
-			PS->body_set_collision_mask(_static_body_rid, _mask);
+			PSs->body_set_collision_mask(_static_body_rid, _mask);
 		}
 	}
 }
@@ -525,7 +525,7 @@ void Terrain3DCollision::set_priority(const real_t p_priority) {
 		}
 	} else {
 		if (_static_body_rid.is_valid()) {
-			PS->body_set_collision_priority(_static_body_rid, _priority);
+			PSs->body_set_collision_priority(_static_body_rid, _priority);
 		}
 	}
 }

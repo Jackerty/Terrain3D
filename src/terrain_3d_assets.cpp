@@ -392,32 +392,32 @@ void Terrain3DAssets::_setup_thumbnail_creation() {
 	}
 	LOG(INFO, "Setting up mesh thumbnail creation viewports");
 	// Setup Mesh preview environment
-	_scenario = RS->scenario_create();
+	_scenario = RSs->scenario_create();
 
-	_viewport = RS->viewport_create();
-	RS->viewport_set_update_mode(_viewport, RenderingServer::VIEWPORT_UPDATE_DISABLED);
-	RS->viewport_set_scenario(_viewport, _scenario);
-	RS->viewport_set_size(_viewport, 128, 128);
-	RS->viewport_set_transparent_background(_viewport, true);
-	RS->viewport_set_active(_viewport, true);
-	_viewport_texture = RS->viewport_get_texture(_viewport);
+	_viewport = RSs->viewport_create();
+	RSs->viewport_set_update_mode(_viewport, RenderingServer::VIEWPORT_UPDATE_DISABLED);
+	RSs->viewport_set_scenario(_viewport, _scenario);
+	RSs->viewport_set_size(_viewport, 128, 128);
+	RSs->viewport_set_transparent_background(_viewport, true);
+	RSs->viewport_set_active(_viewport, true);
+	_viewport_texture = RSs->viewport_get_texture(_viewport);
 
-	_camera = RS->camera_create();
-	RS->viewport_attach_camera(_viewport, _camera);
-	RS->camera_set_transform(_camera, Transform3D(Basis(), Vector3(0, 0, 3)));
-	RS->camera_set_orthogonal(_camera, 1.0, 0.01, 1000.0);
+	_camera = RSs->camera_create();
+	RSs->viewport_attach_camera(_viewport, _camera);
+	RSs->camera_set_transform(_camera, Transform3D(Basis(), Vector3(0, 0, 3)));
+	RSs->camera_set_orthogonal(_camera, 1.0, 0.01, 1000.0);
 
-	_key_light = RS->directional_light_create();
-	_key_light_instance = RS->instance_create2(_key_light, _scenario);
-	RS->instance_set_transform(_key_light_instance, Transform3D().looking_at(V3(-1), V3_UP));
+	_key_light = RSs->directional_light_create();
+	_key_light_instance = RSs->instance_create2(_key_light, _scenario);
+	RSs->instance_set_transform(_key_light_instance, Transform3D().looking_at(V3(-1), V3_UP));
 
-	_fill_light = RS->directional_light_create();
-	RS->light_set_color(_fill_light, Color(0.3, 0.3, 0.3));
-	_fill_light_instance = RS->instance_create2(_fill_light, _scenario);
-	RS->instance_set_transform(_fill_light_instance, Transform3D().looking_at(V3_UP, Vector3(0, 0, 1)));
+	_fill_light = RSs->directional_light_create();
+	RSs->light_set_color(_fill_light, Color(0.3, 0.3, 0.3));
+	_fill_light_instance = RSs->instance_create2(_fill_light, _scenario);
+	RSs->instance_set_transform(_fill_light_instance, Transform3D().looking_at(V3_UP, Vector3(0, 0, 1)));
 
-	_mesh_instance = RS->instance_create();
-	RS->instance_set_scenario(_mesh_instance, _scenario);
+	_mesh_instance = RSs->instance_create();
+	RSs->instance_set_scenario(_mesh_instance, _scenario);
 }
 
 ///////////////////////////
@@ -461,14 +461,14 @@ void Terrain3DAssets::destroy() {
 	_texture_detiles.clear();
 
 	if (_scenario.is_valid()) {
-		RS->free_rid(_mesh_instance);
-		RS->free_rid(_fill_light_instance);
-		RS->free_rid(_fill_light);
-		RS->free_rid(_key_light_instance);
-		RS->free_rid(_key_light);
-		RS->free_rid(_camera);
-		RS->free_rid(_viewport);
-		RS->free_rid(_scenario);
+		RSs->free_rid(_mesh_instance);
+		RSs->free_rid(_fill_light_instance);
+		RSs->free_rid(_fill_light);
+		RSs->free_rid(_key_light_instance);
+		RSs->free_rid(_key_light);
+		RSs->free_rid(_camera);
+		RSs->free_rid(_viewport);
+		RSs->free_rid(_scenario);
 		_mesh_instance = RID();
 		_fill_light_instance = RID();
 		_fill_light = RID();
@@ -587,15 +587,15 @@ void Terrain3DAssets::create_mesh_thumbnails(const int p_id, const Vector2i &p_s
 			LOG(ERROR, i, ": Mesh is null, skipping");
 			continue;
 		}
-		RS->instance_set_base(_mesh_instance, mesh->get_rid());
+		RSs->instance_set_base(_mesh_instance, mesh->get_rid());
 
 		// Setup material
 		Ref<Material> mat = ma->get_material_override();
 		RID rid = mat.is_valid() ? mat->get_rid() : RID();
-		RS->instance_geometry_set_material_override(_mesh_instance, rid);
+		RSs->instance_geometry_set_material_override(_mesh_instance, rid);
 		mat = ma->get_material_overlay();
 		rid = mat.is_valid() ? mat->get_rid() : RID();
-		RS->instance_geometry_set_material_overlay(_mesh_instance, rid);
+		RSs->instance_geometry_set_material_overlay(_mesh_instance, rid);
 
 		// Setup scene
 		AABB aabb = mesh->get_aabb();
@@ -613,15 +613,15 @@ void Terrain3DAssets::create_mesh_thumbnails(const int p_id, const Vector2i &p_s
 		xform.basis.scale(V3(m));
 		xform.origin = -xform.basis.xform(ofs);
 		xform.origin.z -= rot_aabb.size.z * 2.f;
-		RS->instance_set_transform(_mesh_instance, xform);
+		RSs->instance_set_transform(_mesh_instance, xform);
 
 		// Capture image
-		RS->viewport_set_size(_viewport, size.x, size.y);
-		RS->viewport_set_update_mode(_viewport, RenderingServer::VIEWPORT_UPDATE_ONCE);
-		RS->force_draw();
+		RSs->viewport_set_size(_viewport, size.x, size.y);
+		RSs->viewport_set_update_mode(_viewport, RenderingServer::VIEWPORT_UPDATE_ONCE);
+		RSs->force_draw();
 
-		Ref<Image> img = RS->texture_2d_get(_viewport_texture);
-		RS->instance_set_base(_mesh_instance, RID()); // Clear mesh
+		Ref<Image> img = RSs->texture_2d_get(_viewport_texture);
+		RSs->instance_set_base(_mesh_instance, RID()); // Clear mesh
 		if (img.is_valid()) {
 			LOG(DEBUG, i, ": Retrieving image: ", img, " size: ", img->get_size(), " format: ", img->get_format());
 			ma->set_thumbnail(ImageTexture::create_from_image(img));

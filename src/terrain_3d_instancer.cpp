@@ -15,9 +15,9 @@
 // Creates MMIs based on Multimesh data stored in Terrain3DRegions
 void Terrain3DInstancer::_process_updates() {
 	if (_queued_updates.empty()) {
-		if (RS->is_connected("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates))) {
-			LOG(DEBUG, "Disconnect from RS::frame_pre_draw signal");
-			RS->disconnect("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates));
+		if (RSs->is_connected("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates))) {
+			LOG(DEBUG, "Disconnect from RSs::frame_pre_draw signal");
+			RSs->disconnect("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates));
 		}
 		return;
 	}
@@ -1304,9 +1304,9 @@ void Terrain3DInstancer::update_mmis(const int p_mesh_id, const Vector2i &p_regi
 	if (p_rebuild) {
 		_queued_updates.clear();
 		_queued_updates.emplace(V2I_MAX, -2);
-		if (!RS->is_connected("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates))) {
-			LOG(DEBUG, "Connecting to RS::frame_pre_draw signal");
-			RS->connect("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates));
+		if (!RSs->is_connected("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates))) {
+			LOG(DEBUG, "Connecting to RSs::frame_pre_draw signal");
+			RSs->connect("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates));
 		}
 		return;
 	}
@@ -1329,9 +1329,9 @@ void Terrain3DInstancer::update_mmis(const int p_mesh_id, const Vector2i &p_regi
 	}
 	// Else queue up this region/mesh combo
 	_queued_updates.emplace(p_region_loc, mesh_id);
-	if (!RS->is_connected("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates))) {
-		LOG(DEBUG, "Connecting to RS::frame_pre_draw signal");
-		RS->connect("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates));
+	if (!RSs->is_connected("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates))) {
+		LOG(DEBUG, "Connecting to RSs::frame_pre_draw signal");
+		RSs->connect("frame_pre_draw", callable_mp(this, &Terrain3DInstancer::_process_updates));
 	}
 }
 

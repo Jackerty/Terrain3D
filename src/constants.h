@@ -7,8 +7,15 @@
 #include "using.inc"
 
 // Engine Shortcuts
-#define RS RenderingServer::get_singleton()
-#define PS PhysicsServer3D::get_singleton()
+//
+// Define RS and PS in GDExtension as the classes. RS is used same way in engine.
+// To avoid name conclicts use RSs and PSs for the singletons.
+#ifdef GDEXTENSION
+#define RS RenderingServer
+#define PS PhysicsServer3D
+#endif
+#define RSs RenderingServer::get_singleton()
+#define PSs PhysicsServer3D::get_singleton()
 #define IS_EDITOR Engine::get_singleton()->is_editor_hint()
 
 // Constants
