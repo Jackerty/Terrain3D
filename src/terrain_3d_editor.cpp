@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/editor_interface.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/time.hpp>
+#include <godot_cpp/core/math.hpp>
 
 #include "constants.h"
 #include "logger.h"

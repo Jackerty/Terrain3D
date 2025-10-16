@@ -1,6 +1,7 @@
 // Copyright © 2025 Cory Petkovsek, Roope Palmroos, and Contributors.
 
 #include <godot_cpp/classes/resource_saver.hpp>
+#include <godot_cpp/core/math.hpp>
 
 #include "constants.h"
 #include "logger.h"

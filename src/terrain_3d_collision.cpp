@@ -6,6 +6,7 @@
 #include <godot_cpp/classes/world3d.hpp>
 
 #include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/core/math.hpp>
 
 #include "constants.h"
 #include "logger.h"

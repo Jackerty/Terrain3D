@@ -8,6 +8,7 @@
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/quad_mesh.hpp>
 #include <godot_cpp/classes/standard_material3d.hpp>
+#include <godot_cpp/core/math.hpp>
 
 #include "logger.h"
 #include "terrain_3d_instancer.h"

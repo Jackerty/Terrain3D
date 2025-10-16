@@ -5,6 +5,7 @@
 #include <godot_cpp/classes/image_texture.hpp>
 #include <godot_cpp/classes/rendering_server.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
+#include <godot_cpp/core/math.hpp>
 
 #include "logger.h"
 #include "terrain_3d_assets.h"
