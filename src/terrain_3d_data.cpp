@@ -498,7 +498,7 @@ void Terrain3DData::update_maps(const MapType p_map_type, const bool p_all_regio
 				region_id += 1; // Begin at 1 since 0 = no region
 				int map_index = get_region_map_index(region_loc);
 				if (map_index >= 0) {
-					_region_map[map_index] = region_id;
+					_region_map.set(map_index, region_id);
 					_region_locations.push_back(region_loc);
 				}
 			}

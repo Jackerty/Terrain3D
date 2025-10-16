@@ -448,7 +448,7 @@ void Terrain3DMeshAsset::set_lod_range(const int p_lod, const real_t p_distance)
 	if (p_lod < 0 || p_lod >= _lod_ranges.size()) {
 		return;
 	}
-	_lod_ranges[p_lod] = CLAMP(p_distance, 0.f, 100000.f);
+	_lod_ranges.set(p_lod, CLAMP(p_distance, 0.f, 100000.f));
 	LOG(INFO, "Setting LOD ", p_lod, " visibility range: ", _lod_ranges[p_lod]);
 	LOG(DEBUG, "Emitting instancer_setting_changed, ID: ", _id);
 	emit_signal("instancer_setting_changed", _id);

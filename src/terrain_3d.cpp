@@ -383,7 +383,7 @@ Terrain3D::Terrain3D() {
 	// Process the command line
 	PackedStringArray args = OS::get_singleton()->get_cmdline_args();
 	for (int i = args.size() - 1; i >= 0; i--) {
-		String arg = args[i];
+		String arg = args.get(i);
 		if (arg.begins_with("--terrain3d-debug=")) {
 			String value = arg.rsplit("=")[1];
 			if (value == "ERROR") {

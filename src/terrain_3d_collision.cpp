@@ -99,7 +99,7 @@ Dictionary Terrain3DCollision::_get_shape_data(const Vector2i &p_position, const
 					height = (is_hole(cmap->get_pixel(region_size - 1, region_size - 1).r)) ? NAN : map->get_pixel(region_size - 1, region_size - 1).r;
 				}
 			}
-			map_data[index] = height;
+			map_data.set(index, height);
 			if (!std::isnan(height)) {
 				min_height = MIN(min_height, height);
 				max_height = MAX(max_height, height);
@@ -339,7 +339,7 @@ void Terrain3DCollision::update(const bool p_rebuild) {
 			if (!p_rebuild && (shape_center.x < FLT_MAX && v3v2i(shape_center).distance_squared_to(snapped_pos) <= radius_sqr)) {
 				// Get index into shape array
 				Vector2i grid_loc = (shape_pos - grid_pos) / _shape_size;
-				grid[grid_loc.y * grid_width + grid_loc.x] = i;
+				grid.set(grid_loc.y * grid_width + grid_loc.x, i);
 				_shape_set_disabled(i, false);
 				LOG(EXTREME, "Shape ", i, ": shape_center: ", shape_center.x < FLT_MAX ? shape_center : V3(-999), ", shape_pos: ", shape_pos,
 						", grid_loc: ", grid_loc, ", index: ", (grid_loc.y * grid_width + grid_loc.x), " active");
