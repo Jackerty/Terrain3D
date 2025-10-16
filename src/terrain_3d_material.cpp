@@ -843,16 +843,16 @@ void Terrain3DMaterial::_get_property_list(List<PropertyInfo> *p_list) const {
 	Array param_list;
 	if (_shader_override_enabled && _shader_override.is_valid()) {
 		// Get shader parameters from custom shader
-		param_list = _shader_override->get_shader_uniform_list(true);
+		param_list =  GDInterop::Shader::get_shader_uniform_list(_shader_override, true);
 	} else {
 		// Get shader parameters from default shader (eg world_noise)
-		param_list = RSs->get_shader_parameter_list(get_shader_rid());
+		param_list = GDInterop::RenderingServer::get_shader_parameter_list(get_shader_rid());
 	}
 
 	_active_params.clear();
 	for (int i = 0; i < param_list.size(); i++) {
 		Dictionary dict = param_list[i];
-		StringName name = dict["name"];
+		String name = dict["name"];
 
 		// Filter out private uniforms that start with _
 		if (!name.begins_with("_") && !name.is_empty()) {

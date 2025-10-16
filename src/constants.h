@@ -82,7 +82,7 @@ struct Vector3Hash {
 
 // Set class name for logger.h
 
-#define CLASS_NAME() const String __class__ = get_class_static() + \
+#define CLASS_NAME() const String __class__ = String(get_class_static()) + \
 		String("#") + String::num_uint64(get_instance_id()).right(4);
 
 #define CLASS_NAME_STATIC(p_name) static inline const char *__class__ = p_name;
