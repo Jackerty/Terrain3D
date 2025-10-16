@@ -619,7 +619,7 @@ void Terrain3DAssets::create_mesh_thumbnails(const int p_id, const Vector2i &p_s
 		// Capture image
 		RSs->viewport_set_size(_viewport, size.x, size.y);
 		RSs->viewport_set_update_mode(_viewport, RenderingServer::VIEWPORT_UPDATE_ONCE);
-		RSs->force_draw();
+		GDInterop::RenderingServer::force_draw();
 
 		Ref<Image> img = RSs->texture_2d_get(_viewport_texture);
 		RSs->instance_set_base(_mesh_instance, RID()); // Clear mesh
@@ -670,14 +670,14 @@ Error Terrain3DAssets::save(const String &p_path) {
 	}
 	if (!p_path.is_empty()) {
 		LOG(DEBUG, "Setting file path to ", p_path);
-		take_over_path(p_path);
+		DEC_GDMETHOD(take_over_path)(p_path);
 	}
 	// Save to external resource file if specified
 	Error err = OK;
 	String path = get_path();
 	if (path.get_extension() == "tres" || path.get_extension() == "res") {
 		LOG(DEBUG, "Attempting to save external file: " + path);
-		err = ResourceSaver::get_singleton()->save(this, path, ResourceSaver::FLAG_COMPRESS);
+		err = GDInterop::ResourceSaver::save(this, path, ResourceSaver::FLAG_COMPRESS);
 		if (err == OK) {
 			LOG(INFO, "File saved successfully: ", path);
 		} else {

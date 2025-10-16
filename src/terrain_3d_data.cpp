@@ -7,6 +7,7 @@
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/resource_saver.hpp>
 
+#include "gd_interop.hpp"
 #include "logger.h"
 #include "terrain_3d_data.h"
 
@@ -327,7 +328,7 @@ void Terrain3DData::save_region(const Vector2i &p_region_loc, const String &p_di
 		LOG(DEBUG, "Removing ", p_region_loc, " from _regions");
 		_regions.erase(p_region_loc);
 		LOG(DEBUG, "File to be deleted: ", path);
-		if (!FileAccess::file_exists(path)) {
+		if (!GDInterop::FileAccess::file_exists(path)) {
 			LOG(INFO, "File to delete ", path, " doesn't exist. (Maybe from add, undo, save)");
 			return;
 		}
@@ -372,7 +373,7 @@ void Terrain3DData::load_directory(const String &p_dir) {
 			LOG(ERROR, "Cannot get region location from file name: ", fname);
 			continue;
 		}
-		Ref<Terrain3DRegion> region = ResourceLoader::get_singleton()->load(path, "Terrain3DRegion", ResourceFormatLoader::CACHE_MODE_IGNORE);
+		Ref<Terrain3DRegion> region = GDInterop::ResourceLoader::load(path, "Terrain3DRegion", ResourceFormatLoader::CACHE_MODE_IGNORE);
 		if (region.is_null()) {
 			LOG(ERROR, "Cannot load region at ", path);
 			continue;
@@ -399,11 +400,11 @@ void Terrain3DData::load_directory(const String &p_dir) {
 void Terrain3DData::load_region(const Vector2i &p_region_loc, const String &p_dir, const bool p_update) {
 	LOG(INFO, "Loading region from location ", p_region_loc);
 	String path = p_dir + String("/") + Util::location_to_filename(p_region_loc);
-	if (!FileAccess::file_exists(path)) {
+	if (!GDInterop::FileAccess::file_exists(path)) {
 		LOG(ERROR, "File ", path, " doesn't exist");
 		return;
 	}
-	Ref<Terrain3DRegion> region = ResourceLoader::get_singleton()->load(path, "Terrain3DRegion", ResourceFormatLoader::CACHE_MODE_IGNORE);
+	Ref<Terrain3DRegion> region = GDInterop::ResourceLoader::load(path, "Terrain3DRegion", ResourceFormatLoader::CACHE_MODE_IGNORE);
 	if (region.is_null()) {
 		LOG(ERROR, "Cannot load region at ", path);
 		return;
@@ -1077,7 +1078,7 @@ Error Terrain3DData::export_image(const String &p_file_name, const MapType p_map
 	} else if (ext == "webp") {
 		return img->save_webp(file_name);
 	} else if ((ext == "res") || (ext == "tres")) {
-		return ResourceSaver::get_singleton()->save(img, file_name, ResourceSaver::FLAG_COMPRESS);
+		return GDInterop::ResourceSaver::save(img, file_name, ResourceSaver::FLAG_COMPRESS);
 	}
 
 	LOG(ERROR, "No recognized file type. See docs for valid extensions");

@@ -5,6 +5,7 @@
 
 #include "constants.h"
 #include "terrain_3d_util.h"
+#include "gd_interop.hpp"
 #include "using.inc"
 
 class Terrain3DRegion : public Resource {
@@ -115,6 +116,7 @@ public:
 	Ref<Terrain3DRegion> duplicate(const bool p_deep = false);
 	void dump(const bool verbose = false) const;
 
+	RESOURCE_TAKE_OVER_PATH;
 protected:
 	static void _bind_methods();
 };

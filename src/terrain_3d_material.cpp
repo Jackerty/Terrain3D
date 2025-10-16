@@ -186,7 +186,7 @@ String Terrain3DMaterial::_strip_comments(const String &p_shader) const {
 		const int stop = (p_end == -1) ? p_v.size() : p_end;
 		const int count = stop - p_start;
 		String result;
-		result.resize(count + 1);
+		GDInterop::String::resize(&result, count + 1);
 		for (int i = 0; i < count; i++) {
 			result[i] = p_v[p_start + i];
 		}
@@ -782,16 +782,16 @@ Error Terrain3DMaterial::save(const String &p_path) {
 	}
 	if (!p_path.is_empty()) {
 		LOG(DEBUG, "Setting file path to ", p_path);
-		take_over_path(p_path);
+		DEC_GDMETHOD(take_over_path)(p_path);
 	}
 
 	LOG(DEBUG, "Generating parameter list from shaders");
 	// Get shader parameters from default shader (eg world_noise)
 	Array param_list;
-	param_list = RSs->get_shader_parameter_list(get_shader_rid());
+	param_list = GDInterop::RenderingServer::get_shader_parameter_list(get_shader_rid());
 	// Get shader parameters from custom shader if present
 	if (_shader_override.is_valid()) {
-		param_list.append_array(_shader_override->get_shader_uniform_list(true));
+		param_list.append_array(GDInterop::Shader::get_shader_uniform_list(_shader_override, true));
 	}
 
 	// Remove saved shader params that don't exist in either shader
@@ -822,7 +822,7 @@ Error Terrain3DMaterial::save(const String &p_path) {
 	String path = get_path();
 	if (path.get_extension() == "tres" || path.get_extension() == "res") {
 		LOG(DEBUG, "Attempting to save external file: " + path);
-		err = ResourceSaver::get_singleton()->save(this, path, ResourceSaver::FLAG_COMPRESS);
+		err = GDInterop::ResourceSaver::save(this, path, ResourceSaver::FLAG_COMPRESS);
 		if (err == OK) {
 			LOG(INFO, "File saved successfully: ", path);
 		} else {

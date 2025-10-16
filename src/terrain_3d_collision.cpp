@@ -265,7 +265,7 @@ void Terrain3DCollision::build() {
 			col_shape->set_name("CollisionShape3D");
 			col_shape->set_disabled(true);
 			col_shape->set_visible(true);
-			col_shape->set_enable_debug_fill(false);
+			GDInterop::CollisionShape3D::set_enable_debug_fill(col_shape, false);
 			Ref<HeightMapShape3D> hshape;
 			hshape.instantiate();
 			hshape->set_map_width(hshape_size);

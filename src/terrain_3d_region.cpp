@@ -283,10 +283,10 @@ Error Terrain3DRegion::save(const String &p_path, const bool p_16_bit) {
 		original_map.instantiate();
 		original_map->copy_from(_height_map);
 		_height_map->convert(Image::FORMAT_RH);
-		err = ResourceSaver::get_singleton()->save(this, get_path(), ResourceSaver::FLAG_COMPRESS);
+		err = GDInterop::ResourceSaver::save(this, get_path(), ResourceSaver::FLAG_COMPRESS);
 		_height_map = original_map;
 	} else {
-		err = ResourceSaver::get_singleton()->save(this, get_path(), ResourceSaver::FLAG_COMPRESS);
+		err = GDInterop::ResourceSaver::save(this, get_path(), ResourceSaver::FLAG_COMPRESS);
 	}
 	if (err == OK) {
 		_modified = false;

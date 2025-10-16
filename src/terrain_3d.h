@@ -13,6 +13,7 @@
 #include <godot_cpp/classes/sub_viewport.hpp>
 
 #include "constants.h"
+#include "gd_interop.hpp"
 #include "target_node_3d.h"
 #include "terrain_3d_assets.h"
 #include "terrain_3d_collision.h"
@@ -201,7 +202,7 @@ public:
 	// Warnings
 	void set_warning(const uint8_t p_warning, const bool p_enabled);
 	uint8_t get_warnings() const { return _warnings; }
-	PackedStringArray _get_configuration_warnings() const override;
+	PackedStringArray DEC_GDVIRTUAL(get_configuration_warnings)() const override;
 
 	// Collision Aliases
 	void set_collision_mode(const CollisionMode p_mode) { _collision ? _collision->set_mode(p_mode) : void(); }

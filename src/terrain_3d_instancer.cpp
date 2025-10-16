@@ -4,6 +4,7 @@
 #include <godot_cpp/core/math.hpp>
 
 #include "constants.h"
+#include "gd_interop.hpp"
 #include "logger.h"
 #include "terrain_3d_instancer.h"
 #include "terrain_3d_region.h"
@@ -208,7 +209,7 @@ void Terrain3DInstancer::_update_mmi_by_region(const Terrain3DRegion *p_region, 
 				cell_mmi_dict[cell] = mmi;
 
 				//Attach to tree
-				Node *node_container = _terrain->get_mmi_parent()->get_node_internal(rname);
+				Node *node_container = GDInterop::Node::get_node_internal(_terrain->get_mmi_parent(), rname);
 				if (!node_container) {
 					LOG(ERROR, rname, " isn't attached to the tree.");
 					memdelete(mmi);

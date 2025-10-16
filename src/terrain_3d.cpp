@@ -381,7 +381,7 @@ void Terrain3D::_generate_triangle_pair(PackedVector3Array &p_vertices, PackedVe
 
 Terrain3D::Terrain3D() {
 	// Process the command line
-	PackedStringArray args = OS::get_singleton()->get_cmdline_args();
+	GDInterop::OS::CMDLINE_ARGS args = OS::get_singleton()->get_cmdline_args();
 	for (int i = args.size() - 1; i >= 0; i--) {
 		String arg = args.get(i);
 		if (arg.begins_with("--terrain3d-debug=")) {
@@ -782,7 +782,7 @@ Dictionary Terrain3D::get_raycast_result(const Vector3 &p_src_pos, const Vector3
 	if (_collision && p_exclude_self) {
 		query->set_exclude(TypedArray<RID>(_collision->get_rid()));
 	}
-	return space_state->intersect_ray(query);
+	return GDInterop::PhysicsDirectSpaceState3D::intersect_ray(space_state, query);
 }
 
 /**
@@ -846,7 +846,7 @@ void Terrain3D::set_warning(const uint8_t p_warning, const bool p_enabled) {
 	update_configuration_warnings();
 }
 
-PackedStringArray Terrain3D::_get_configuration_warnings() const {
+PackedStringArray Terrain3D::DEC_GDVIRTUAL(get_configuration_warnings)() const {
 	PackedStringArray psa;
 	if (_data_directory.is_empty()) {
 		psa.push_back("No data directory specified. Select a directory then save the scene to write data.");
@@ -901,7 +901,7 @@ void Terrain3D::_notification(const int p_what) {
 			_setup_mouse_picking();
 			if (_free_editor_textures && !IS_EDITOR && _assets.is_valid() && !_assets->get_path().contains("Terrain3DAssets")) {
 				LOG(INFO, "free_editor_textures enabled, reloading Assets path: ", _assets->get_path());
-				_assets = ResourceLoader::get_singleton()->load(_assets->get_path(), "", ResourceFormatLoader::CACHE_MODE_IGNORE);
+				_assets = GDInterop::ResourceLoader::load(_assets->get_path(), "", ResourceFormatLoader::CACHE_MODE_IGNORE);
 			}
 			_initialize(); // Rebuild anything freed: meshes, collision, instancer
 			set_physics_process(true);

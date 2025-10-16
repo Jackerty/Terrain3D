@@ -313,7 +313,7 @@ Ref<Image> Terrain3DUtil::load_image(const String &p_file_name, const int p_cach
 		LOG(ERROR, "No file specified. Nothing imported");
 		return Ref<Image>();
 	}
-	if (!FileAccess::file_exists(p_file_name)) {
+	if (!GDInterop::FileAccess::file_exists(p_file_name)) {
 		LOG(ERROR, "File ", p_file_name, " does not exist. Nothing to import");
 		return Ref<Image>();
 	}
@@ -355,7 +355,7 @@ Ref<Image> Terrain3DUtil::load_image(const String &p_file_name, const int p_cach
 		// Else, see if Godot's resource loader will read it as an image: RES, TRES, etc
 	} else {
 		LOG(DEBUG, "Loading file as a resource");
-		img = ResourceLoader::get_singleton()->load(p_file_name, "", static_cast<ResourceFormatLoader::CacheMode>(p_cache_mode));
+		img = GDInterop::ResourceLoader::load(p_file_name, "", static_cast<ResourceFormatLoader::CacheMode>(p_cache_mode));
 	}
 
 	if (!img.is_valid()) {
