@@ -38,7 +38,7 @@ public:
 
 	bool is_valid() const {
 		if (_target && _instance_id > 0) {
-			return _target == ObjectDB::get_instance(_instance_id);
+			return _target == ObjectDB::get_instance(ObjectID(_instance_id));
 		}
 		return false;
 	}
