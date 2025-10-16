@@ -245,8 +245,12 @@ void Terrain3DRegion::calc_height_range() {
 }
 
 void Terrain3DRegion::set_instances(const Dictionary &p_instances) {
+	#ifdef GDEXTENSION	
 	LOG(INFO, "Region ", _location, " setting instances ptr: ", ptr_to_str(p_instances._native_ptr()));
 	if (!_instances.is_empty() && _instances._native_ptr() != p_instances._native_ptr()) {
+	#else
+	if (!_instances.is_empty() && _instances != p_instances) {
+	#endif
 		_modified = true;
 	}
 	_instances = p_instances;
@@ -376,7 +380,11 @@ void Terrain3DRegion::dump(const bool verbose) const {
 			ptr_to_str(this));
 	LOG(MESG, "Height map: ", ptr_to_str(*_height_map), ", Control map: ", ptr_to_str(*_control_map),
 			", Color map: ", ptr_to_str(*_color_map));
+#ifdef GDEXTENSION
 	LOG(MESG, "Instances: Mesh IDs: ", _instances.size(), ", ", ptr_to_str(_instances._native_ptr()));
+#else
+	LOG(MESG, "Instances: Mesh IDs: ", _instances.size(), ", ", ptr_to_str(&_instances));
+#endif
 	Array mesh_ids = _instances.keys();
 	for (int m = 0; m < mesh_ids.size(); m++) {
 		int mesh_id = mesh_ids[m];
