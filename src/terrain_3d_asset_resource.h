@@ -13,6 +13,7 @@ class Terrain3DAssets;
 // Parent class of Terrain3DMeshAsset and Terrain3DTextureAsset
 class Terrain3DAssetResource : public Resource {
 	friend class Terrain3DAssets;
+	GDCLASS(Terrain3DAssetResource, Resource);
 
 public:
 	Terrain3DAssetResource() {}
