@@ -355,7 +355,7 @@ Ref<Image> Terrain3DUtil::load_image(const String &p_file_name, const int p_cach
 		// Else, see if Godot's resource loader will read it as an image: RES, TRES, etc
 	} else {
 		LOG(DEBUG, "Loading file as a resource");
-		img = ResourceLoader::get_singleton()->load(p_file_name, "", static_cast<ResourceLoader::CacheMode>(p_cache_mode));
+		img = ResourceLoader::get_singleton()->load(p_file_name, "", static_cast<ResourceFormatLoader::CacheMode>(p_cache_mode));
 	}
 
 	if (!img.is_valid()) {
@@ -539,7 +539,7 @@ void Terrain3DUtil::_bind_methods() {
 	ClassDB::bind_static_method("Terrain3DUtil", D_METHOD("get_min_max", "image"), &Terrain3DUtil::get_min_max);
 	ClassDB::bind_static_method("Terrain3DUtil", D_METHOD("get_thumbnail", "image", "size"), &Terrain3DUtil::get_thumbnail, DEFVAL(V2I(256)));
 	ClassDB::bind_static_method("Terrain3DUtil", D_METHOD("get_filled_image", "size", "color", "create_mipmaps", "format"), &Terrain3DUtil::get_filled_image);
-	ClassDB::bind_static_method("Terrain3DUtil", D_METHOD("load_image", "file_name", "cache_mode", "r16_height_range", "r16_size"), &Terrain3DUtil::load_image, DEFVAL(ResourceLoader::CACHE_MODE_IGNORE), DEFVAL(Vector2(0.f, 255.f)), DEFVAL(V2I_ZERO));
+	ClassDB::bind_static_method("Terrain3DUtil", D_METHOD("load_image", "file_name", "cache_mode", "r16_height_range", "r16_size"), &Terrain3DUtil::load_image, DEFVAL(ResourceFormatLoader::CACHE_MODE_IGNORE), DEFVAL(Vector2(0.f, 255.f)), DEFVAL(V2I_ZERO));
 	ClassDB::bind_static_method("Terrain3DUtil", D_METHOD("pack_image", "src_rgb", "src_a", "invert_green", "invert_alpha", "normalize_alpha", "alpha_channel"), &Terrain3DUtil::pack_image, DEFVAL(false), DEFVAL(false), DEFVAL(false), DEFVAL(0));
 	ClassDB::bind_static_method("Terrain3DUtil", D_METHOD("luminance_to_height", "src_rgb"), &Terrain3DUtil::luminance_to_height);
 }
