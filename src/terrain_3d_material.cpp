@@ -251,7 +251,7 @@ String Terrain3DMaterial::_inject_editor_code(const String &p_shader) const {
 	regex.instantiate();
 	regex->compile("render_mode.*;?");
 	Ref<RegExMatch> match = regex->search(shader);
-	int idx = match.is_valid() ? match->get_end() : -1;
+	int idx = match.is_valid() ? match->get_end(0) : -1;
 	if (idx < 0) {
 		LOG(DEBUG, "No render mode; cannot inject editor code");
 		return shader;
@@ -270,7 +270,7 @@ String Terrain3DMaterial::_inject_editor_code(const String &p_shader) const {
 	// Insert before vertex()
 	regex->compile("void\\s+vertex\\s*\\(");
 	match = regex->search(shader);
-	idx = match.is_valid() ? match->get_start() - 1 : -1;
+	idx = match.is_valid() ? match->get_start(0) - 1 : -1;
 	if (idx < 0) {
 		LOG(DEBUG, "No void vertex(); cannot inject editor code");
 		return shader;
@@ -298,7 +298,7 @@ String Terrain3DMaterial::_inject_editor_code(const String &p_shader) const {
 	match = regex->search(shader);
 	idx = -1;
 	if (match.is_valid()) {
-		int start_idx = match->get_end() - 1;
+		int start_idx = match->get_end(0) - 1;
 		int pair = 0;
 		for (int i = start_idx; i < shader.length(); i++) {
 			if (shader[i] == '{') {
