@@ -1,0 +1,1 @@
+#include "scene/resources/environment.h"
