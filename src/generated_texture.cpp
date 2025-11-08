@@ -13,7 +13,7 @@
 void GeneratedTexture::clear() {
 	if (_rid.is_valid()) {
 		LOG(EXTREME, "GeneratedTexture freeing ", _rid);
-		RSs->free_rid(_rid);
+		RSs->free(_rid);
 	}
 	if (_image.is_valid()) {
 		LOG(EXTREME, "GeneratedTexture unref image", _image);

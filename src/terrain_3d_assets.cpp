@@ -462,14 +462,14 @@ void Terrain3DAssets::destroy() {
 	_texture_detiles.clear();
 
 	if (_scenario.is_valid()) {
-		RSs->free_rid(_mesh_instance);
-		RSs->free_rid(_fill_light_instance);
-		RSs->free_rid(_fill_light);
-		RSs->free_rid(_key_light_instance);
-		RSs->free_rid(_key_light);
-		RSs->free_rid(_camera);
-		RSs->free_rid(_viewport);
-		RSs->free_rid(_scenario);
+		RSs->free(_mesh_instance);
+		RSs->free(_fill_light_instance);
+		RSs->free(_fill_light);
+		RSs->free(_key_light_instance);
+		RSs->free(_key_light);
+		RSs->free(_camera);
+		RSs->free(_viewport);
+		RSs->free(_scenario);
 		_mesh_instance = RID();
 		_fill_light_instance = RID();
 		_fill_light = RID();

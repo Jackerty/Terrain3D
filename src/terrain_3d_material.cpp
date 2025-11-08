@@ -600,7 +600,7 @@ void Terrain3DMaterial::destroy() {
 	_active_params.clear();
 	_shader_params.clear();
 	if (_material.is_valid()) {
-		RSs->free_rid(_material);
+		RSs->free(_material);
 		_material = RID();
 	}
 }

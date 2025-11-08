@@ -258,7 +258,7 @@ void Terrain3DMesher::_clear_clipmap() {
 		for (int mesh = 0; mesh < lod_array.size(); mesh++) {
 			Array mesh_array = lod_array[mesh];
 			for (int instance = 0; instance < mesh_array.size(); instance++) {
-				RSs->free_rid(mesh_array[instance]);
+				RSs->free(mesh_array[instance]);
 			}
 			mesh_array.clear();
 		}
@@ -272,7 +272,7 @@ void Terrain3DMesher::_clear_clipmap() {
 void Terrain3DMesher::_clear_mesh_types() {
 	LOG(INFO, "Freeing all clipmap meshes");
 	for (int m = 0; m < _mesh_rids.size(); m++) {
-		RSs->free_rid(_mesh_rids[m]);
+		RSs->free(_mesh_rids[m]);
 	}
 	_mesh_rids.clear();
 	return;

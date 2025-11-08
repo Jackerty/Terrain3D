@@ -426,11 +426,11 @@ void Terrain3DCollision::destroy() {
 		while (PSs->body_get_shape_count(_static_body_rid) > 0) {
 			RID rid = PSs->body_get_shape(_static_body_rid, 0);
 			LOG(DEBUG, "Freeing CollisionShape RID ", rid);
-			PSs->free_rid(rid);
+			PSs->free(rid);
 		}
 
 		LOG(DEBUG, "Freeing StaticBody RID");
-		PSs->free_rid(_static_body_rid);
+		PSs->free(_static_body_rid);
 		_static_body_rid = RID();
 	}
 
