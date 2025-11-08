@@ -309,8 +309,8 @@ void Terrain3DData::save_directory(const String &p_dir) {
 	for (int i = 0; i < locations.size(); i++) {
 		save_region(locations[i], p_dir, _terrain->get_save_16_bit());
 	}
-	if (IS_EDITOR && !EditorInterface::get_singleton()->get_resource_filesystem()->is_scanning()) {
-		EditorInterface::get_singleton()->get_resource_filesystem()->scan();
+	if (IS_EDITOR && !EditorInterface::get_singleton()->get_resource_file_system()->is_scanning()) {
+		EditorInterface::get_singleton()->get_resource_file_system()->scan();
 	}
 }
 
