@@ -509,14 +509,14 @@ void Terrain3DMeshAsset::_validate_property(PropertyInfo &p_property) const {
 }
 
 bool Terrain3DMeshAsset::_property_can_revert(const StringName &p_name) const {
-	return (p_name.match("last_lod") || p_name.match("last_shadow_lod"));
+	return (p_name == "last_lod" || p_name == "last_shadow_lod");
 }
 
 bool Terrain3DMeshAsset::_property_get_revert(const StringName &p_name, Variant &r_property) const {
-	if (p_name.match("last_lod")) {
+	if (p_name == "last_lod") {
 		r_property = get_lod_count() - 1;
 		return true;
-	} else if (p_name.match("last_shadow_lod")) {
+	} else if (p_name == "last_shadow_lod") {
 		r_property = get_lod_count() - 1;
 		return true;
 	}
